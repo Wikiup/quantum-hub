@@ -6,6 +6,7 @@ import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
 import { StatsGame } from './modules/stats.js';
 import { SettingsModule } from './modules/settings.js';
+import { ExploreModule } from './modules/explore.js';
 import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
 import { history } from './history.js';
@@ -16,7 +17,7 @@ import { loading, LoadingUI } from './loading.js';
 const routes = {
     home: { title: 'Quantum Hub', render: renderHome },
     wheels: { title: 'My Wheels', render: renderWheels, afterRender: initWheels },
-    explore: { title: 'Explore', render: renderExplore },
+    explore: { title: 'Explore', render: renderExplore, afterRender: initExplore },
     stats: { title: 'Statistics', render: renderModuleStats, afterRender: initStats },
     settings: { title: 'Settings', render: renderSettings, afterRender: initSettings },
     'wheel-editor': { title: 'Wheel Editor', render: renderWheelEditor, afterRender: initWheelEditor },
@@ -344,33 +345,12 @@ function initWheels() {
 }
 
 function renderExplore() {
-    return `
-        <div class="p-4">
-            <div class="flex gap-4 mb-4 border-b border-slate-700">
-                <button class="pb-2 border-b-2 border-cyan-400 text-white font-medium">Trending</button>
-                <button class="pb-2 border-b-2 border-transparent text-slate-400 font-medium">New</button>
-            </div>
-            <div class="grid gap-4">
-                <!-- Mock Templates -->
-                ${[1,2,3].map(i => `
-                    <div class="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
-                        <div class="h-24 bg-gradient-to-r from-slate-700 to-slate-600 flex items-center justify-center">
-                            <i class="bi bi-image text-3xl opacity-20"></i>
-                        </div>
-                        <div class="p-3 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-sm">Dinner Decider</h4>
-                                <span class="text-xs text-slate-400">12.5k uses</span>
-                            </div>
-                            <button class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center hover:bg-cyan-500 hover:text-slate-900 transition">
-                                <i class="bi bi-play-fill"></i>
-                            </button>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
+    return `<div id="explore-container" class="h-full flex flex-col relative overflow-hidden"></div>`;
+}
+
+function initExplore() {
+    activeModule = new ExploreModule(document.getElementById('explore-container'));
+    activeModule.render();
 }
 
 // ---- Modules ----
@@ -580,9 +560,14 @@ function renderModuleWheel(params = {}) {
 
 function initWheel(params = {}) {
     const wheelId = params.wheelId;
+    const customSegments = params.customSegments; // From Explore templates
     let wheelConfig = null;
     
-    if (wheelId) {
+    if (customSegments) {
+        // Use custom segments from template
+        wheelConfig = customSegments;
+    } else if (wheelId) {
+        // Load saved wheel
         const savedWheel = store.getWheel(wheelId);
         if (savedWheel) {
             wheelConfig = savedWheel.segments;
