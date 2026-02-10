@@ -4,35 +4,47 @@
  */
 
 import { history } from '../history.js';
+import { LoadingUI } from '../loading.js';
 
 export class StatsGame {
     constructor(container) {
         this.container = container;
-        this.stats = history.getStats();
-        this.activities = history.getAll();
+        this.stats = null;
+        this.activities = null;
     }
 
-    render() {
+    async render() {
+        // Show skeleton loading
+        this.container.innerHTML = LoadingUI.createSkeleton('stats');
+        
+        // Simulate data loading (in real app, this would be async data fetch)
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Load data
+        this.stats = history.getStats();
+        this.activities = history.getAll();
+        
+        // Render actual content
         this.container.innerHTML = `
             <div class="stats-dashboard">
                 <!-- Overview Cards -->
                 <div class="stats-overview">
-                    <div class="stat-card">
+                    <div class="stat-card staggered-item">
                         <div class="stat-icon">🎯</div>
                         <div class="stat-value">${this.stats.total}</div>
                         <div class="stat-label">Total Activities</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card staggered-item">
                         <div class="stat-icon">📅</div>
                         <div class="stat-value">${this.stats.recent24h}</div>
                         <div class="stat-label">Last 24 Hours</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card staggered-item">
                         <div class="stat-icon">⭐</div>
                         <div class="stat-value">${this.stats.mostActive || 'N/A'}</div>
                         <div class="stat-label">Most Used</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card staggered-item">
                         <div class="stat-icon">🔥</div>
                         <div class="stat-value">${this.calculateStreak()}</div>
                         <div class="stat-label">Day Streak</div>
@@ -40,7 +52,7 @@ export class StatsGame {
                 </div>
 
                 <!-- Activity Breakdown -->
-                <div class="stats-section">
+                <div class="stats-section delayed-content">
                     <h3 class="stats-heading">Activity Breakdown</h3>
                     <div class="stats-breakdown">
                         ${this.renderBreakdown()}
@@ -48,7 +60,7 @@ export class StatsGame {
                 </div>
 
                 <!-- Usage Chart -->
-                <div class="stats-section">
+                <div class="stats-section delayed-content">
                     <h3 class="stats-heading">Usage Over Time</h3>
                     <div class="stats-chart">
                         ${this.renderTimelineChart()}
@@ -56,7 +68,7 @@ export class StatsGame {
                 </div>
 
                 <!-- Activity Timeline -->
-                <div class="stats-section">
+                <div class="stats-section delayed-content">
                     <h3 class="stats-heading">Recent Activity</h3>
                     <div class="stats-timeline">
                         ${this.renderTimeline()}

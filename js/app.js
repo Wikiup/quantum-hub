@@ -8,6 +8,7 @@ import { StatsGame } from './modules/stats.js';
 import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
 import { history } from './history.js';
+import { loading, LoadingUI } from './loading.js';
 
 // Router and State Management
 
@@ -86,6 +87,9 @@ function init() {
 }
 
 function navigate(route, params = {}) {
+    // Show progress bar for navigation
+    loading.showProgress();
+    
     // Cleanup active module
     if (activeModule) {
         if (typeof activeModule.destroy === 'function') {
@@ -128,7 +132,14 @@ function navigate(route, params = {}) {
     // Lifecycle Hook
     if (view.afterRender) {
         // slight delay to ensure DOM is ready if needed, though innerHTML is sync
-        requestAnimationFrame(() => view.afterRender(params));
+        requestAnimationFrame(() => {
+            view.afterRender(params);
+            // Hide progress bar after render
+            setTimeout(() => loading.hideProgress(), 100);
+        });
+    } else {
+        // Hide progress bar immediately if no afterRender
+        setTimeout(() => loading.hideProgress(), 100);
     }
 }
 
@@ -625,7 +636,10 @@ function renderModuleStats() {
 
 function initStats() {
     activeModule = new StatsGame(document.getElementById('stats-container'));
-    activeModule.render();
+    activeModule.render().then(() => {
+        // Animate staggered items after render
+        LoadingUI.animateStaggeredList(document.getElementById('stats-container'), '.staggered-item');
+    });
 }
 
 // Expose navigate to window for inline onclicks (hack for now)
