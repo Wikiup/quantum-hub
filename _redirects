@@ -1,7 +1,7 @@
 # Preserve static files (don't SPA route them)
-/manifest.json  /manifest.json  200
-/service-worker.js  /service-worker.js  200
-/assets/*  /assets/:splat  200
+/manifest.json /manifest.json 200
+/service-worker.js /service-worker.js 200
+/assets/* /assets/:splat 200
 
 # SPA fallback for everything else
-/*  /index.html  200
+/* /index.html 200
