@@ -119,7 +119,7 @@ export class WheelGame {
                 <div id="result-display" class="h-10 text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-6 tracking-wide uppercase drop-shadow-sm flex items-center justify-center"></div>
 
                 <div class="flex gap-4 w-full max-w-md px-6">
-                    <button id="spin-btn" class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
+                    <button id="spin-btn" data-primary-action class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
                         SPIN
                     </button>
                     <button id="edit-btn" class="bg-slate-700 hover:bg-slate-600 text-white p-4 rounded-xl shadow-lg transition active:scale-95 border-t border-white/10">

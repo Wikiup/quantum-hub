@@ -43,7 +43,7 @@ export class DiceGame {
                 </div>
 
                 <div class="w-full max-w-md px-6 mt-6">
-                    <button id="roll-btn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
+                    <button id="roll-btn" data-primary-action class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
                         ROLL DICE
                     </button>
                 </div>

@@ -69,7 +69,7 @@ export class RaffleGame {
 
                 <!-- Draw Button -->
                 <div class="p-4 border-t border-slate-700/50">
-                    <button id="draw-btn" class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-black text-lg shadow-lg transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <button id="draw-btn" data-primary-action class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-black text-lg shadow-lg transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                         🎲 DRAW WINNER
                     </button>
                 </div>

@@ -47,7 +47,7 @@ export class CoinGame {
                 </div>
 
                 <div class="w-full max-w-md px-6 mt-6">
-                    <button id="flip-btn" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-yellow-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
+                    <button id="flip-btn" data-primary-action class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-yellow-500/30 transform active:scale-95 transition-all text-lg tracking-wider border-t border-white/20">
                         FLIP COIN
                     </button>
                 </div>

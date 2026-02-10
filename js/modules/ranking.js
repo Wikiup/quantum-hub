@@ -47,7 +47,7 @@ export class RankingGame {
                     </div>
 
                     <button 
-                        id="start-ranking"
+                        id="start-ranking" data-primary-action
                         class="py-4 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white rounded-xl font-bold text-lg tracking-wide transition shadow-lg shadow-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Start Ranking

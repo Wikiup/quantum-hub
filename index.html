@@ -34,7 +34,12 @@
     <header class="h-14 flex items-center justify-between px-4 border-b border-slate-800 bg-slate-900/95 backdrop-blur z-20">
         <button id="back-btn" class="hidden text-xl text-slate-400 hover:text-white transition"><i class="bi bi-chevron-left"></i></button>
         <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent" id="page-title">Quantum Hub</h1>
-        <button id="settings-btn" class="text-xl text-slate-400 hover:text-white transition"><i class="bi bi-gear"></i></button>
+        <div class="flex items-center gap-2">
+            <button id="keyboard-help-btn" class="text-xl text-slate-400 hover:text-white transition" title="Keyboard Shortcuts (?)">
+                <i class="bi bi-keyboard"></i>
+            </button>
+            <button id="settings-btn" class="text-xl text-slate-400 hover:text-white transition"><i class="bi bi-gear"></i></button>
+        </div>
     </header>
 
     <!-- Main Content (Router View) -->

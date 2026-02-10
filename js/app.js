@@ -4,6 +4,7 @@ import { CoinGame } from './modules/coin.js';
 import { RaffleGame } from './modules/raffle.js';
 import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
+import { KeyboardShortcuts } from './keyboard.js';
 
 // Router and State Management
 
@@ -25,6 +26,7 @@ const app = document.getElementById('app');
 const pageTitle = document.getElementById('pageTitle');
 const backBtn = document.getElementById('back-btn');
 let activeModule = null; // Store active module instance
+let keyboardShortcuts = null; // Keyboard shortcuts instance
 
 function init() {
     // Nav listeners
@@ -34,6 +36,30 @@ function init() {
 
     // Back button
     backBtn.addEventListener('click', () => navigate('home')); // Simple back logic for now
+
+    // Initialize Keyboard Shortcuts
+    keyboardShortcuts = new KeyboardShortcuts();
+    
+    // Keyboard help button
+    document.getElementById('keyboard-help-btn').addEventListener('click', () => {
+        keyboardShortcuts.showHelp();
+    });
+    
+    // Listen for keyboard navigation events
+    window.addEventListener('keyboard-navigate', (e) => {
+        navigate(e.detail.route);
+    });
+
+    // Listen for keyboard primary action events
+    window.addEventListener('keyboard-action', (e) => {
+        if (e.detail.action === 'primary' && activeModule) {
+            // Trigger the primary action button in the active module
+            const primaryBtn = document.querySelector('[data-primary-action]');
+            if (primaryBtn && !primaryBtn.disabled) {
+                primaryBtn.click();
+            }
+        }
+    });
 
     // Initial Render
     navigate('home');

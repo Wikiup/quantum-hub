@@ -64,15 +64,15 @@ export class RPSGame {
                 <!-- Controls -->
                 <div class="p-6 pb-8 space-y-4">
                     <div id="choice-buttons" class="grid grid-cols-3 gap-3">
-                        <button class="rps-btn" data-choice="rock">
+                        <button data-primary-action class="rps-btn" data-choice="rock">
                             <span class="text-5xl">🪨</span>
                             <span class="text-xs font-bold mt-1">ROCK</span>
                         </button>
-                        <button class="rps-btn" data-choice="paper">
+                        <button data-primary-action class="rps-btn" data-choice="paper">
                             <span class="text-5xl">📄</span>
                             <span class="text-xs font-bold mt-1">PAPER</span>
                         </button>
-                        <button class="rps-btn" data-choice="scissors">
+                        <button data-primary-action class="rps-btn" data-choice="scissors">
                             <span class="text-5xl">✂️</span>
                             <span class="text-xs font-bold mt-1">SCISSORS</span>
                         </button>
