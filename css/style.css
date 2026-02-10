@@ -146,3 +146,33 @@ body {
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
+/* Wheel Library Cards */
+.wheel-library-card {
+    transition: all 0.2s ease;
+}
+.wheel-library-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(34, 211, 238, 0.2);
+}
+
+/* Template Buttons */
+.template-btn {
+    padding: 0.75rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.template-btn:hover {
+    background: #334155;
+    border-color: #22d3ee;
+    color: #22d3ee;
+    transform: translateY(-1px);
+}
+.template-btn:active {
+    transform: scale(0.98);
+}

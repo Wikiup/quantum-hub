@@ -5,13 +5,15 @@ import { RaffleGame } from './modules/raffle.js';
 import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
 import { KeyboardShortcuts } from './keyboard.js';
+import { store } from './store.js';
 
 // Router and State Management
 
 const routes = {
     home: { title: 'Quantum Hub', render: renderHome },
-    wheels: { title: 'My Wheels', render: renderWheels },
+    wheels: { title: 'My Wheels', render: renderWheels, afterRender: initWheels },
     explore: { title: 'Explore', render: renderExplore },
+    'wheel-editor': { title: 'Wheel Editor', render: renderWheelEditor, afterRender: initWheelEditor },
     // Modules
     wheel: { title: 'Spin Wheel', render: renderModuleWheel, afterRender: initWheel },
     dice: { title: 'Dice Roll', render: renderModuleDice, afterRender: initDice },
@@ -89,9 +91,16 @@ function navigate(route, params = {}) {
     if (['home', 'wheels', 'explore'].includes(route)) {
         backBtn.classList.add('hidden');
         document.querySelector('nav').classList.remove('hidden');
+    } else if (route === 'wheel-editor') {
+        backBtn.classList.remove('hidden');
+        document.querySelector('nav').classList.add('hidden');
+        // Custom back behavior for editor
+        backBtn.onclick = () => navigate('wheels');
     } else {
         backBtn.classList.remove('hidden');
-        document.querySelector('nav').classList.add('hidden'); 
+        document.querySelector('nav').classList.add('hidden');
+        // Default back to home
+        backBtn.onclick = () => navigate('home');
     }
 
     // Render View
@@ -137,15 +146,123 @@ function renderHome() {
 }
 
 function renderWheels() {
+    const wheels = store.getWheels();
+    
+    if (wheels.length === 0) {
+        return `
+            <div class="p-4 flex flex-col items-center justify-center h-full text-slate-500">
+                <i class="bi bi-collection text-4xl mb-2 opacity-50"></i>
+                <p>No wheels yet. Create your first one!</p>
+                <button onclick="window.navigate('wheel-editor')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-full transition">
+                    + Create New Wheel
+                </button>
+            </div>
+        `;
+    }
+    
     return `
-        <div class="p-4 flex flex-col items-center justify-center h-full text-slate-500">
-            <i class="bi bi-collection text-4xl mb-2 opacity-50"></i>
-            <p>Your saved wheels will appear here.</p>
-            <button class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-full transition">
-                + Create New Wheel
+        <div class="p-4 pb-20">
+            <button onclick="window.navigate('wheel-editor')" class="w-full mb-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold rounded-xl transition shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-2">
+                <i class="bi bi-plus-circle text-xl"></i>
+                Create New Wheel
             </button>
+            
+            <div class="grid grid-cols-1 gap-4">
+                ${wheels.map(wheel => `
+                    <div class="wheel-library-card bg-slate-800/80 backdrop-blur rounded-xl border border-slate-700 overflow-hidden hover:border-cyan-500/50 transition">
+                        <div class="p-4 flex items-start gap-3">
+                            <!-- Mini Wheel Preview -->
+                            <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-slate-900 border border-slate-700 flex items-center justify-center relative">
+                                <svg class="w-full h-full" viewBox="0 0 100 100">
+                                    ${wheel.segments.map((seg, i) => {
+                                        const angle = (360 / wheel.segments.length);
+                                        const startAngle = i * angle - 90;
+                                        const endAngle = startAngle + angle;
+                                        const x1 = 50 + 45 * Math.cos(startAngle * Math.PI / 180);
+                                        const y1 = 50 + 45 * Math.sin(startAngle * Math.PI / 180);
+                                        const x2 = 50 + 45 * Math.cos(endAngle * Math.PI / 180);
+                                        const y2 = 50 + 45 * Math.sin(endAngle * Math.PI / 180);
+                                        const largeArc = angle > 180 ? 1 : 0;
+                                        return `
+                                            <path d="M 50 50 L ${x1} ${y1} A 45 45 0 ${largeArc} 1 ${x2} ${y2} Z" 
+                                                  fill="${seg.color}" opacity="0.9" />
+                                        `;
+                                    }).join('')}
+                                    <circle cx="50" cy="50" r="12" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                                </svg>
+                            </div>
+                            
+                            <!-- Info -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="font-bold text-white truncate">${wheel.name}</h3>
+                                        <p class="text-xs text-slate-400 mt-0.5">${wheel.segments.length} options</p>
+                                    </div>
+                                    ${wheel.isDefault ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-medium shrink-0">Default</span>' : ''}
+                                </div>
+                                
+                                <!-- Color Dots Preview -->
+                                <div class="flex gap-1 mt-2">
+                                    ${wheel.segments.slice(0, 8).map(seg => `
+                                        <div class="w-3 h-3 rounded-full" style="background: ${seg.color}"></div>
+                                    `).join('')}
+                                    ${wheel.segments.length > 8 ? '<span class="text-[10px] text-slate-500 ml-1">+' + (wheel.segments.length - 8) + '</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="px-4 pb-4 flex gap-2">
+                            <button onclick="window.spinWheel('${wheel.id}')" class="flex-1 px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500 text-cyan-400 hover:text-slate-900 rounded-lg font-medium transition flex items-center justify-center gap-1.5">
+                                <i class="bi bi-play-circle"></i>
+                                Spin
+                            </button>
+                            <button onclick="window.editWheel('${wheel.id}')" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button onclick="window.duplicateWheel('${wheel.id}')" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition">
+                                <i class="bi bi-files"></i>
+                            </button>
+                            ${!wheel.isDefault ? `
+                                <button onclick="window.deleteWheel('${wheel.id}')" class="px-3 py-2 bg-slate-700 hover:bg-red-500/20 text-slate-300 hover:text-red-400 rounded-lg transition">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
         </div>
     `;
+}
+
+function initWheels() {
+    // Attach global wheel actions
+    window.spinWheel = (id) => {
+        const wheel = store.getWheel(id);
+        if (wheel) {
+            navigate('wheel', { wheelId: id });
+        }
+    };
+    
+    window.editWheel = (id) => {
+        navigate('wheel-editor', { wheelId: id });
+    };
+    
+    window.duplicateWheel = (id) => {
+        const duplicate = store.duplicateWheel(id);
+        if (duplicate) {
+            navigate('wheels'); // Refresh view
+        }
+    };
+    
+    window.deleteWheel = (id) => {
+        if (confirm('Delete this wheel? This cannot be undone.')) {
+            store.deleteWheel(id);
+            navigate('wheels'); // Refresh view
+        }
+    };
 }
 
 function renderExplore() {
@@ -180,12 +297,221 @@ function renderExplore() {
 
 // ---- Modules ----
 
-function renderModuleWheel() {
-    return `<div id="wheel-container" class="h-full flex flex-col relative"></div>`;
+function renderWheelEditor(params = {}) {
+    const wheelId = params.wheelId;
+    const existingWheel = wheelId ? store.getWheel(wheelId) : null;
+    
+    return `
+        <div id="wheel-editor-container" class="h-full overflow-y-auto p-4 pb-24">
+            <form id="wheel-editor-form" class="max-w-2xl mx-auto">
+                <!-- Wheel Name -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Wheel Name</label>
+                    <input type="text" id="wheel-name" value="${existingWheel?.name || ''}" 
+                           placeholder="e.g. Dinner Ideas, Yes or No" 
+                           class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none transition" 
+                           required />
+                </div>
+                
+                <!-- Segments -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-sm font-medium text-slate-300">Segments</label>
+                        <span class="text-xs text-slate-500" id="segment-count">0 options</span>
+                    </div>
+                    
+                    <div id="segments-list" class="space-y-2 mb-3">
+                        <!-- Segments will be rendered here -->
+                    </div>
+                    
+                    <button type="button" id="add-segment-btn" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-cyan-500/50 rounded-lg text-slate-400 hover:text-cyan-400 font-medium transition flex items-center justify-center gap-2">
+                        <i class="bi bi-plus-circle"></i>
+                        Add Segment
+                    </button>
+                </div>
+                
+                <!-- Quick Templates -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Quick Templates</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" data-template="yes-no" class="template-btn">Yes/No</button>
+                        <button type="button" data-template="1-6" class="template-btn">1-6</button>
+                        <button type="button" data-template="lunch" class="template-btn">Lunch Ideas</button>
+                        <button type="button" data-template="movie-genres" class="template-btn">Movie Genres</button>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold rounded-xl transition shadow-lg shadow-cyan-500/30">
+                        ${existingWheel ? 'Save Changes' : 'Create Wheel'}
+                    </button>
+                    <button type="button" onclick="window.navigate('wheels')" class="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium rounded-xl transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
 }
 
-function initWheel() {
-    activeModule = new WheelGame('wheel-container');
+function initWheelEditor(params = {}) {
+    const wheelId = params.wheelId;
+    const existingWheel = wheelId ? store.getWheel(wheelId) : null;
+    
+    let segments = existingWheel?.segments || [
+        { label: 'Option 1', color: '#FF6B6B' },
+        { label: 'Option 2', color: '#4ECDC4' }
+    ];
+    
+    const templates = {
+        'yes-no': [
+            { label: 'Yes', color: '#10b981' },
+            { label: 'No', color: '#ef4444' }
+        ],
+        '1-6': [
+            { label: '1', color: '#ef4444' },
+            { label: '2', color: '#f59e0b' },
+            { label: '3', color: '#eab308' },
+            { label: '4', color: '#22c55e' },
+            { label: '5', color: '#3b82f6' },
+            { label: '6', color: '#8b5cf6' }
+        ],
+        'lunch': [
+            { label: 'Pizza', color: '#ef4444' },
+            { label: 'Sushi', color: '#f59e0b' },
+            { label: 'Burger', color: '#eab308' },
+            { label: 'Salad', color: '#22c55e' },
+            { label: 'Tacos', color: '#3b82f6' },
+            { label: 'Pasta', color: '#8b5cf6' }
+        ],
+        'movie-genres': [
+            { label: 'Action', color: '#ef4444' },
+            { label: 'Comedy', color: '#eab308' },
+            { label: 'Drama', color: '#8b5cf6' },
+            { label: 'Horror', color: '#1f2937' },
+            { label: 'Sci-Fi', color: '#3b82f6' },
+            { label: 'Romance', color: '#ec4899' }
+        ]
+    };
+    
+    function renderSegments() {
+        const container = document.getElementById('segments-list');
+        const countEl = document.getElementById('segment-count');
+        
+        container.innerHTML = segments.map((seg, index) => `
+            <div class="flex items-center gap-2">
+                <input type="text" value="${seg.label}" 
+                       data-index="${index}" 
+                       class="segment-label flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none transition" 
+                       placeholder="Option ${index + 1}" />
+                <input type="color" value="${seg.color}" 
+                       data-index="${index}" 
+                       class="segment-color w-12 h-10 rounded-lg border border-slate-700 cursor-pointer bg-slate-800" />
+                <button type="button" data-index="${index}" class="remove-segment-btn w-10 h-10 rounded-lg bg-slate-700 hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition flex items-center justify-center">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        `).join('');
+        
+        countEl.textContent = `${segments.length} option${segments.length !== 1 ? 's' : ''}`;
+        
+        // Attach listeners
+        container.querySelectorAll('.segment-label').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                segments[index].label = e.target.value;
+            });
+        });
+        
+        container.querySelectorAll('.segment-color').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                segments[index].color = e.target.value;
+            });
+        });
+        
+        container.querySelectorAll('.remove-segment-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                if (segments.length > 2) {
+                    segments.splice(index, 1);
+                    renderSegments();
+                } else {
+                    alert('A wheel must have at least 2 segments.');
+                }
+            });
+        });
+    }
+    
+    function addSegment() {
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F43', '#6C5CE7', '#A8E6CF'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        segments.push({ label: `Option ${segments.length + 1}`, color: randomColor });
+        renderSegments();
+    }
+    
+    // Initial render
+    renderSegments();
+    
+    // Add segment button
+    document.getElementById('add-segment-btn').addEventListener('click', addSegment);
+    
+    // Template buttons
+    document.querySelectorAll('.template-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const template = btn.dataset.template;
+            if (templates[template]) {
+                segments = [...templates[template]];
+                renderSegments();
+            }
+        });
+    });
+    
+    // Form submission
+    document.getElementById('wheel-editor-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('wheel-name').value.trim();
+        if (!name) {
+            alert('Please enter a wheel name.');
+            return;
+        }
+        
+        if (segments.length < 2) {
+            alert('A wheel must have at least 2 segments.');
+            return;
+        }
+        
+        const wheel = {
+            id: wheelId || undefined,
+            name,
+            segments,
+            isDefault: false
+        };
+        
+        store.saveWheel(wheel);
+        navigate('wheels');
+    });
+}
+
+function renderModuleWheel(params = {}) {
+    return `<div id="wheel-container" class="h-full flex flex-col relative"></div>`;
+}
+}
+
+function initWheel(params = {}) {
+    const wheelId = params.wheelId;
+    let wheelConfig = null;
+    
+    if (wheelId) {
+        const savedWheel = store.getWheel(wheelId);
+        if (savedWheel) {
+            wheelConfig = savedWheel.segments;
+        }
+    }
+    
+    activeModule = new WheelGame('wheel-container', wheelConfig);
 }
 
 function renderModuleDice() {

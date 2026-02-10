@@ -1,11 +1,11 @@
 import { HapticFeedback } from '../haptics.js';
 
 export class WheelGame {
-    constructor(containerId) {
+    constructor(containerId, customSegments = null) {
         this.container = document.getElementById(containerId);
         this.canvas = null;
         this.ctx = null;
-        this.segments = [
+        this.segments = customSegments || [
             { label: 'Yes', color: '#FF6B6B' },
             { label: 'No', color: '#4ECDC4' },
             { label: 'Maybe', color: '#FFE66D' },
