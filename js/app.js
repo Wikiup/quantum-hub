@@ -4,6 +4,7 @@ import { CoinGame } from './modules/coin.js';
 import { RaffleGame } from './modules/raffle.js';
 import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
+import { StatsGame } from './modules/stats.js';
 import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
 import { history } from './history.js';
@@ -14,6 +15,7 @@ const routes = {
     home: { title: 'Quantum Hub', render: renderHome },
     wheels: { title: 'My Wheels', render: renderWheels, afterRender: initWheels },
     explore: { title: 'Explore', render: renderExplore },
+    stats: { title: 'Statistics', render: renderModuleStats, afterRender: initStats },
     'wheel-editor': { title: 'Wheel Editor', render: renderWheelEditor, afterRender: initWheelEditor },
     // Modules
     wheel: { title: 'Spin Wheel', render: renderModuleWheel, afterRender: initWheel },
@@ -139,7 +141,8 @@ function renderHome() {
         { id: 'coin', name: 'Coin Flip', icon: 'bi-coin', color: 'text-yellow-400' },
         { id: 'raffle', name: 'Raffle', icon: 'bi-ticket-perforated', color: 'text-purple-400' },
         { id: 'ranking', name: 'Ranking', icon: 'bi-trophy', color: 'text-rose-400' },
-        { id: 'rps', name: 'R-P-S', icon: 'bi-scissors', color: 'text-orange-400' } // Rock Paper Scissors
+        { id: 'rps', name: 'R-P-S', icon: 'bi-scissors', color: 'text-orange-400' }, // Rock Paper Scissors
+        { id: 'stats', name: 'Statistics', icon: 'bi-graph-up', color: 'text-indigo-400' } // Stats Dashboard
     ];
     
     // Get recent history
@@ -614,6 +617,15 @@ function renderModuleRPS() {
 
 function initRPS() {
     activeModule = new RPSGame('rps-container');
+}
+
+function renderModuleStats() {
+    return `<div id="stats-container" class="h-full flex flex-col relative overflow-y-auto"></div>`;
+}
+
+function initStats() {
+    activeModule = new StatsGame(document.getElementById('stats-container'));
+    activeModule.render();
 }
 
 // Expose navigate to window for inline onclicks (hack for now)
