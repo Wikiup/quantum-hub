@@ -1,3 +1,5 @@
+import { HapticFeedback } from '../haptics.js';
+
 export class CoinGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -104,6 +106,9 @@ export class CoinGame {
         if (this.isFlipping) return;
         this.isFlipping = true;
         
+        // Haptic feedback on flip start
+        HapticFeedback.medium();
+        
         const btn = this.container.querySelector('#flip-btn');
         btn.classList.add('opacity-50', 'cursor-not-allowed');
         const resultDisplay = this.container.querySelector('#coin-result');
@@ -158,6 +163,7 @@ export class CoinGame {
             resultDisplay.innerText = this.result;
             resultDisplay.className = `text-xl ml-1 font-bold ${isHeads ? 'text-yellow-400' : 'text-slate-300'}`;
             this.playLandSound();
+            HapticFeedback.heavy(); // Success haptic on land
         }, 3000); // Matches duration-3000
     }
 }

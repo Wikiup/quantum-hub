@@ -1,3 +1,5 @@
+import { HapticFeedback } from '../haptics.js';
+
 export class RaffleGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -220,6 +222,9 @@ export class RaffleGame {
         // Pick final winner
         const winner = this.entries[Math.floor(Math.random() * this.entries.length)];
         winnerName.textContent = winner;
+        
+        // Haptic success feedback on winner reveal
+        HapticFeedback.success();
 
         // Show winner
         winnerDisplay.classList.remove('hidden');

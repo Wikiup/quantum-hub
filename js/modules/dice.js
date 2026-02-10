@@ -1,3 +1,5 @@
+import { HapticFeedback } from '../haptics.js';
+
 export class DiceGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -140,6 +142,9 @@ export class DiceGame {
         if (this.isRolling) return;
         this.isRolling = true;
         
+        // Haptic feedback on roll start
+        HapticFeedback.medium();
+        
         const btn = this.container.querySelector('#roll-btn');
         btn.classList.add('opacity-50', 'cursor-not-allowed');
         this.container.querySelector('#dice-total').innerText = '...';
@@ -196,6 +201,7 @@ export class DiceGame {
             btn.classList.remove('opacity-50', 'cursor-not-allowed');
             this.container.querySelector('#dice-total').innerText = total;
             this.playRollSound(); // Land sound
+            HapticFeedback.heavy(); // Success haptic
         }, 2000);
     }
 }

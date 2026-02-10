@@ -1,3 +1,5 @@
+import { HapticFeedback } from '../haptics.js';
+
 export class WheelGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -76,6 +78,9 @@ export class WheelGame {
     }
 
     playTick() {
+        // Haptic feedback on each tick
+        HapticFeedback.tick();
+        
         if (!this.audioCtx) return;
         if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
 
@@ -282,6 +287,9 @@ export class WheelGame {
     spin() {
         if (this.isSpinning) return;
         
+        // Haptic feedback on spin start
+        HapticFeedback.medium();
+        
         // Init audio context on first user interaction if suspended
         if (this.audioCtx && this.audioCtx.state === 'suspended') {
             this.audioCtx.resume();
@@ -337,6 +345,9 @@ export class WheelGame {
         
         const index = Math.floor(relativeAngle / arc);
         const winner = this.segments[index];
+        
+        // Haptic success feedback
+        HapticFeedback.success();
         
         const resultDisplay = this.container.querySelector('#result-display');
         resultDisplay.textContent = winner.label;

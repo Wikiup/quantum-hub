@@ -1,3 +1,5 @@
+import { HapticFeedback } from '../haptics.js';
+
 export class RankingGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -285,6 +287,9 @@ export class RankingGame {
         document.getElementById('voting-phase').classList.add('hidden');
         document.getElementById('results-phase').classList.remove('hidden');
 
+        // Haptic feedback on results reveal
+        HapticFeedback.success();
+        
         // Confetti for winner
         this.playConfetti();
     }

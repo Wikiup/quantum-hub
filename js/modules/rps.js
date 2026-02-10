@@ -1,5 +1,7 @@
 // 🪨📄✂️ Rock-Paper-Scissors Module
 
+import { HapticFeedback } from '../haptics.js';
+
 export class RPSGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -114,6 +116,9 @@ export class RPSGame {
     play(playerChoice) {
         this.gameState = 'playing';
         this.playerChoice = playerChoice;
+        
+        // Haptic feedback on play
+        HapticFeedback.light();
 
         // Disable buttons during animation
         this.container.querySelectorAll('.rps-btn').forEach(btn => {
@@ -195,15 +200,18 @@ export class RPSGame {
         // Animate result
         setTimeout(() => {
             if (this.result === 'win') {
+                HapticFeedback.success(); // Victory haptic
                 resultText.textContent = 'YOU WIN! 🎉';
                 resultText.className = 'text-lg font-black tracking-tight text-emerald-400';
                 playerHand.classList.add('animate-bounce');
                 this.celebrate();
             } else if (this.result === 'lose') {
+                HapticFeedback.error(); // Defeat haptic
                 resultText.textContent = 'YOU LOSE 😢';
                 resultText.className = 'text-lg font-black tracking-tight text-rose-400';
                 computerHand.classList.add('animate-bounce');
             } else {
+                HapticFeedback.medium(); // Tie haptic
                 resultText.textContent = "IT'S A TIE! 🤝";
                 resultText.className = 'text-lg font-black tracking-tight text-yellow-400';
             }
