@@ -1,0 +1,50 @@
+{
+  "name": "Quantum Hub - Ultimate Decision Toolkit",
+  "short_name": "Quantum Hub",
+  "description": "Spin wheels, roll dice, flip coins, and run raffles with premium 3D animations. The most satisfying decision maker on the web.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#22d3ee",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "productivity", "utilities"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Spin Wheel",
+      "short_name": "Wheel",
+      "description": "Launch the spin wheel directly",
+      "url": "/?module=wheel",
+      "icons": []
+    },
+    {
+      "name": "Roll Dice",
+      "short_name": "Dice",
+      "description": "Roll dice with 3D physics",
+      "url": "/?module=dice",
+      "icons": []
+    },
+    {
+      "name": "Flip Coin",
+      "short_name": "Coin",
+      "description": "Flip a coin with 3D animation",
+      "url": "/?module=coin",
+      "icons": []
+    }
+  ]
+}
