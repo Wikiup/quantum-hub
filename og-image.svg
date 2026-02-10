@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="coinGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="diceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="15" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Grid Pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Decorative Wheel (Top Right) -->
+  <g transform="translate(950, 150)">
+    <path d="M 0,-120 A 120,120 0 0,1 103.92,-60 L 0,0 Z" fill="#FF6B6B" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <path d="M 103.92,-60 A 120,120 0 0,1 103.92,60 L 0,0 Z" fill="#4ECDC4" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <path d="M 103.92,60 A 120,120 0 0,1 0,120 L 0,0 Z" fill="#FFE66D" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <path d="M 0,120 A 120,120 0 0,1 -103.92,60 L 0,0 Z" fill="#6C5CE7" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <path d="M -103.92,60 A 120,120 0 0,1 -103.92,-60 L 0,0 Z" fill="#A8E6CF" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <path d="M -103.92,-60 A 120,120 0 0,1 0,-120 L 0,0 Z" fill="#FF9F43" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+    <circle cx="0" cy="0" r="24" fill="white"/>
+  </g>
+  
+  <!-- Decorative Dice (Top Left) -->
+  <g transform="translate(100, 100) rotate(15)">
+    <rect x="0" y="0" width="100" height="100" rx="15" fill="url(#diceGradient)"/>
+    <circle cx="25" cy="25" r="8" fill="white"/>
+    <circle cx="75" cy="25" r="8" fill="white"/>
+    <circle cx="50" cy="50" r="8" fill="white"/>
+    <circle cx="25" cy="75" r="8" fill="white"/>
+    <circle cx="75" cy="75" r="8" fill="white"/>
+  </g>
+  
+  <!-- Decorative Coin (Bottom Right) -->
+  <circle cx="1050" cy="480" r="60" fill="url(#coinGradient)"/>
+  <circle cx="1050" cy="480" r="51" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+  <text x="1050" y="490" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="rgba(0,0,0,0.3)" text-anchor="middle">$</text>
+  
+  <!-- Main Title with Glow -->
+  <text x="80" y="300" font-family="'Outfit', Arial, sans-serif" font-size="96" font-weight="bold" fill="white" filter="url(#glow)">Quantum Hub</text>
+  
+  <!-- Gradient Subtitle -->
+  <text x="80" y="380" font-family="'Outfit', Arial, sans-serif" font-size="48" font-weight="bold" fill="url(#textGradient)">Ultimate Randomizer</text>
+  
+  <!-- Tagline -->
+  <text x="80" y="460" font-family="'Outfit', Arial, sans-serif" font-size="32" fill="rgba(255,255,255,0.7)">Spin • Roll • Flip • Decide</text>
+  
+  <!-- Feature Pills -->
+  <g transform="translate(80, 530)">
+    <rect x="0" y="0" width="150" height="40" rx="20" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.4)" stroke-width="2"/>
+    <text x="28" y="27" font-family="'Outfit', Arial, sans-serif" font-size="18" font-weight="bold" fill="#06b6d4">Spin Wheel</text>
+  </g>
+  <g transform="translate(245, 530)">
+    <rect x="0" y="0" width="140" height="40" rx="20" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.4)" stroke-width="2"/>
+    <text x="28" y="27" font-family="'Outfit', Arial, sans-serif" font-size="18" font-weight="bold" fill="#06b6d4">Dice Roll</text>
+  </g>
+  <g transform="translate(400, 530)">
+    <rect x="0" y="0" width="135" height="40" rx="20" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.4)" stroke-width="2"/>
+    <text x="28" y="27" font-family="'Outfit', Arial, sans-serif" font-size="18" font-weight="bold" fill="#06b6d4">Coin Flip</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="80" y="600" font-family="'Outfit', Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.5)">quantum-hub-fuk.pages.dev</text>
+</svg>
