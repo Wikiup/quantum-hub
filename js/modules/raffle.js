@@ -1,5 +1,6 @@
 import { HapticFeedback } from '../haptics.js';
 import { history } from '../history.js';
+import { audio } from '../audio.js';
 
 export class RaffleGame {
     constructor(containerId) {
@@ -193,6 +194,9 @@ export class RaffleGame {
         drawBtn.disabled = true;
         drawBtn.innerHTML = '<i class="bi bi-hourglass-split animate-spin"></i> Drawing...';
 
+        // Sound effect - drum roll
+        audio.drumRoll();
+
         // Dramatic drum roll effect
         let iterations = 0;
         const maxIterations = 30;
@@ -210,9 +214,6 @@ export class RaffleGame {
                 this.revealWinner();
             }
         }, 100);
-
-        // Play drum roll sound (if you add audio later)
-        // this.playSound('drumroll');
     }
 
     revealWinner() {
@@ -226,6 +227,9 @@ export class RaffleGame {
         
         // Haptic success feedback on winner reveal
         HapticFeedback.success();
+        
+        // Sound effects - confetti celebration
+        audio.confetti();
 
         // Show winner
         winnerDisplay.classList.remove('hidden');

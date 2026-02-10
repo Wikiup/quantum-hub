@@ -11,6 +11,7 @@ import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
 import { history } from './history.js';
 import { loading, LoadingUI } from './loading.js';
+import { audio } from './audio.js';
 
 // Router and State Management
 
@@ -38,13 +39,19 @@ let activeModule = null; // Store active module instance
 let keyboardShortcuts = null; // Keyboard shortcuts instance
 
 function init() {
-    // Nav listeners
+    // Nav listeners with sound feedback
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => navigate(btn.dataset.route));
+        btn.addEventListener('click', () => {
+            audio.navigate();
+            navigate(btn.dataset.route);
+        });
     });
 
-    // Back button
-    backBtn.addEventListener('click', () => navigate('home')); // Simple back logic for now
+    // Back button with sound
+    backBtn.addEventListener('click', () => {
+        audio.navigate();
+        navigate('home');
+    });
 
     // Initialize Keyboard Shortcuts
     keyboardShortcuts = new KeyboardShortcuts();
@@ -56,6 +63,7 @@ function init() {
     
     // Listen for keyboard navigation events
     window.addEventListener('keyboard-navigate', (e) => {
+        audio.navigate();
         navigate(e.detail.route);
     });
 

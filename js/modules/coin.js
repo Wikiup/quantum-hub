@@ -1,5 +1,6 @@
 import { HapticFeedback } from '../haptics.js';
 import { history } from '../history.js';
+import { audio } from '../audio.js';
 
 export class CoinGame {
     constructor(containerId) {
@@ -109,6 +110,9 @@ export class CoinGame {
         
         // Haptic feedback on flip start
         HapticFeedback.medium();
+        
+        // Sound effect - coin flip
+        audio.coinFlip();
         
         const btn = this.container.querySelector('#flip-btn');
         btn.classList.add('opacity-50', 'cursor-not-allowed');

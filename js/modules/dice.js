@@ -1,5 +1,6 @@
 import { HapticFeedback } from '../haptics.js';
 import { history } from '../history.js';
+import { audio } from '../audio.js';
 
 export class DiceGame {
     constructor(containerId) {
@@ -145,6 +146,9 @@ export class DiceGame {
         
         // Haptic feedback on roll start
         HapticFeedback.medium();
+        
+        // Sound effect - dice roll
+        audio.diceRoll();
         
         const btn = this.container.querySelector('#roll-btn');
         btn.classList.add('opacity-50', 'cursor-not-allowed');

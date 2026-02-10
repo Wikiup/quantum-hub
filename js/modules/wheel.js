@@ -1,5 +1,6 @@
 import { HapticFeedback } from '../haptics.js';
 import { history } from '../history.js';
+import { audio } from '../audio.js';
 
 export class WheelGame {
     constructor(containerId, customSegments = null) {
@@ -291,6 +292,9 @@ export class WheelGame {
         // Haptic feedback on spin start
         HapticFeedback.medium();
         
+        // Sound effect - wheel start
+        audio.wheelStart();
+        
         // Init audio context on first user interaction if suspended
         if (this.audioCtx && this.audioCtx.state === 'suspended') {
             this.audioCtx.resume();
@@ -328,6 +332,7 @@ export class WheelGame {
 
             if (currentIndex !== this.lastTickIndex) {
                 this.playTick();
+                audio.wheelTick(); // Add our new audio system tick
                 this.lastTickIndex = currentIndex;
             }
 
@@ -349,6 +354,9 @@ export class WheelGame {
         
         // Haptic success feedback
         HapticFeedback.success();
+        
+        // Sound effect - celebratory wheel stop
+        audio.wheelStop();
         
         const resultDisplay = this.container.querySelector('#result-display');
         resultDisplay.textContent = winner.label;
