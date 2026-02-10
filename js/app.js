@@ -5,6 +5,7 @@ import { RaffleGame } from './modules/raffle.js';
 import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
 import { StatsGame } from './modules/stats.js';
+import { SettingsModule } from './modules/settings.js';
 import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
 import { history } from './history.js';
@@ -17,6 +18,7 @@ const routes = {
     wheels: { title: 'My Wheels', render: renderWheels, afterRender: initWheels },
     explore: { title: 'Explore', render: renderExplore },
     stats: { title: 'Statistics', render: renderModuleStats, afterRender: initStats },
+    settings: { title: 'Settings', render: renderSettings, afterRender: initSettings },
     'wheel-editor': { title: 'Wheel Editor', render: renderWheelEditor, afterRender: initWheelEditor },
     // Modules
     wheel: { title: 'Spin Wheel', render: renderModuleWheel, afterRender: initWheel },
@@ -153,7 +155,8 @@ function renderHome() {
         { id: 'raffle', name: 'Raffle', icon: 'bi-ticket-perforated', color: 'text-purple-400' },
         { id: 'ranking', name: 'Ranking', icon: 'bi-trophy', color: 'text-rose-400' },
         { id: 'rps', name: 'R-P-S', icon: 'bi-scissors', color: 'text-orange-400' }, // Rock Paper Scissors
-        { id: 'stats', name: 'Statistics', icon: 'bi-graph-up', color: 'text-indigo-400' } // Stats Dashboard
+        { id: 'stats', name: 'Statistics', icon: 'bi-graph-up', color: 'text-indigo-400' }, // Stats Dashboard
+        { id: 'settings', name: 'Settings', icon: 'bi-gear', color: 'text-slate-400' } // Settings
     ];
     
     // Get recent history
@@ -640,6 +643,15 @@ function initStats() {
         // Animate staggered items after render
         LoadingUI.animateStaggeredList(document.getElementById('stats-container'), '.staggered-item');
     });
+}
+
+function renderSettings() {
+    return `<div id="settings-container" class="h-full flex flex-col relative overflow-y-auto"></div>`;
+}
+
+function initSettings() {
+    activeModule = new SettingsModule(document.getElementById('settings-container'));
+    activeModule.render();
 }
 
 // Expose navigate to window for inline onclicks (hack for now)
