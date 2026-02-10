@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class RankingGame {
     constructor(containerId) {
@@ -292,6 +293,17 @@ export class RankingGame {
         
         // Confetti for winner
         this.playConfetti();
+        
+        // Log to history
+        const topItem = ranked[0][0];
+        history.add({
+            type: 'ranking',
+            result: topItem,
+            details: {
+                totalItems: this.items.length,
+                fullRanking: ranked.map(([item, score]) => ({ item, score }))
+            }
+        });
     }
 
     playConfetti() {

@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class RaffleGame {
     constructor(containerId) {
@@ -234,6 +235,16 @@ export class RaffleGame {
 
         // Play win sound
         // this.playSound('win');
+        
+        // Log to history
+        history.add({
+            type: 'raffle',
+            result: winner,
+            details: {
+                totalEntries: this.entries.length,
+                allEntries: [...this.entries]
+            }
+        });
 
         drawBtn.disabled = false;
         drawBtn.innerHTML = '🎲 DRAW WINNER';

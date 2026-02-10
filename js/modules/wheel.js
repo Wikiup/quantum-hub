@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class WheelGame {
     constructor(containerId, customSegments = null) {
@@ -352,6 +353,16 @@ export class WheelGame {
         const resultDisplay = this.container.querySelector('#result-display');
         resultDisplay.textContent = winner.label;
         resultDisplay.classList.add('scale-125', 'transition-transform');
+        
+        // Log to history
+        history.add({
+            type: 'wheel',
+            result: winner.label,
+            details: {
+                totalOptions: this.segments.length,
+                allOptions: this.segments.map(s => s.label)
+            }
+        });
         
         // Celebration sound (higher pitch tick sequence or just a chime)
         if (this.audioCtx) {

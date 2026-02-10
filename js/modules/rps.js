@@ -1,6 +1,7 @@
 // 🪨📄✂️ Rock-Paper-Scissors Module
 
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class RPSGame {
     constructor(containerId) {
@@ -225,6 +226,16 @@ export class RPSGame {
                     <span class="text-yellow-400">T: ${this.stats.ties}</span>
                 </div>
             `;
+
+            // Log to history
+            history.add({
+                type: 'rps',
+                result: this.result,
+                details: {
+                    playerChoice: this.playerChoice,
+                    computerChoice: this.computerChoice
+                }
+            });
 
             // Show play again button
             this.container.querySelector('#play-again').classList.remove('hidden');

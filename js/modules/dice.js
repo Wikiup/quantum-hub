@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class DiceGame {
     constructor(containerId) {
@@ -202,6 +203,15 @@ export class DiceGame {
             this.container.querySelector('#dice-total').innerText = total;
             this.playRollSound(); // Land sound
             HapticFeedback.heavy(); // Success haptic
+            
+            // Log to history
+            history.add({
+                type: 'dice',
+                result: total.toString(),
+                details: {
+                    diceCount: this.diceCount
+                }
+            });
         }, 2000);
     }
 }

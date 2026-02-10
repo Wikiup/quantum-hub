@@ -6,6 +6,7 @@ import { RankingGame } from './modules/ranking.js';
 import { RPSGame } from './modules/rps.js';
 import { KeyboardShortcuts } from './keyboard.js';
 import { store } from './store.js';
+import { history } from './history.js';
 
 // Router and State Management
 
@@ -62,6 +63,21 @@ function init() {
             }
         }
     });
+    
+    // Listen for history updates to refresh home view
+    window.addEventListener('history-updated', () => {
+        if (currentRoute === 'home') {
+            navigate('home');
+        }
+    });
+    
+    // Global clear history handler
+    window.clearHistory = () => {
+        if (confirm('Clear all activity history? This cannot be undone.')) {
+            history.clear();
+            navigate('home');
+        }
+    };
 
     // Initial Render
     navigate('home');
@@ -125,6 +141,31 @@ function renderHome() {
         { id: 'ranking', name: 'Ranking', icon: 'bi-trophy', color: 'text-rose-400' },
         { id: 'rps', name: 'R-P-S', icon: 'bi-scissors', color: 'text-orange-400' } // Rock Paper Scissors
     ];
+    
+    // Get recent history
+    const recentHistory = history.getAll({ limit: 5 });
+    
+    // Format timestamp
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp);
+        const now = Date.now();
+        const diff = now - timestamp;
+        
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+        return date.toLocaleDateString();
+    };
+    
+    // Icon map
+    const iconMap = {
+        wheel: 'bi-pie-chart text-cyan-400',
+        dice: 'bi-dice-5 text-emerald-400',
+        coin: 'bi-coin text-yellow-400',
+        raffle: 'bi-ticket-perforated text-purple-400',
+        ranking: 'bi-trophy text-rose-400',
+        rps: 'bi-scissors text-orange-400'
+    };
 
     return `
         <div class="p-4 grid grid-cols-2 gap-4">
@@ -136,11 +177,31 @@ function renderHome() {
             `).join('')}
         </div>
         
-        <div class="px-6 mt-4">
-            <h3 class="text-xs uppercase text-slate-500 font-bold mb-3 tracking-widest">Recent Activity</h3>
-            <div class="bg-slate-800/50 rounded-lg p-4 text-center text-slate-500 text-sm italic">
-                No recent spins yet.
+        <div class="px-6 mt-4 pb-24">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs uppercase text-slate-500 font-bold tracking-widest">Recent Activity</h3>
+                ${recentHistory.length > 0 ? `<button onclick="window.clearHistory()" class="text-[10px] text-slate-500 hover:text-rose-400 transition"><i class="bi bi-trash"></i></button>` : ''}
             </div>
+            
+            ${recentHistory.length === 0 ? `
+                <div class="bg-slate-800/50 rounded-lg p-4 text-center text-slate-500 text-sm italic">
+                    No recent spins yet.
+                </div>
+            ` : `
+                <div class="space-y-2">
+                    ${recentHistory.map(entry => `
+                        <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:border-slate-600 transition">
+                            <div class="flex items-start gap-3">
+                                <i class="bi ${iconMap[entry.type]} text-lg mt-0.5"></i>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-sm text-white truncate">${entry.result}</div>
+                                    <div class="text-xs text-slate-500 mt-0.5">${formatTime(entry.timestamp)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `}
         </div>
     `;
 }

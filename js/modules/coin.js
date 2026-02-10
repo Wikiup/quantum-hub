@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../haptics.js';
+import { history } from '../history.js';
 
 export class CoinGame {
     constructor(containerId) {
@@ -164,6 +165,12 @@ export class CoinGame {
             resultDisplay.className = `text-xl ml-1 font-bold ${isHeads ? 'text-yellow-400' : 'text-slate-300'}`;
             this.playLandSound();
             HapticFeedback.heavy(); // Success haptic on land
+            
+            // Log to history
+            history.add({
+                type: 'coin',
+                result: this.result
+            });
         }, 3000); // Matches duration-3000
     }
 }
